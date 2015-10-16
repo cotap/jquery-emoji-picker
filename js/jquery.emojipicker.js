@@ -203,13 +203,23 @@
     },
 
     emojiClicked: function(e) {
-      var emojiShortcode = $(e.target).attr('class').split('emoji-')[1];
+      var target = $(e.target);
+
+      var emojiShortcode = target.attr('class').split('emoji-')[1];
       var emojiUnicode = toUnicode(findEmoji(emojiShortcode).unicode);
 
+      // Store the selected image as a `data` attribute, in case we need to use
+      // it directly.
+      this.$el.data('image', target.css('backgroundImage'));
+
       insertAtCaret(this.element, emojiUnicode);
-      
+
       // trigger change event on input
       $(this.element).trigger("keyup");
+
+      if (this.settings.hideOnSelection) {
+        this.hide();
+      }
     },
 
     emojiCategoryClicked: function(e) {
