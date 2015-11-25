@@ -353,7 +353,7 @@
       var startPos = inputField.selectionStart;
       var endPos = inputField.selectionEnd;
       var scrollTop = inputField.scrollTop;
-      inputField.value = inputField.value.substring(0, startPos)+myValue+inputField.value.substring(endPos,inputField.value.length);
+      inputField.value = myValue; //inputField.value.substring(0, startPos)+myValue+inputField.value.substring(endPos,inputField.value.length);
       inputField.focus();
       inputField.selectionStart = startPos + myValue.length;
       inputField.selectionEnd = startPos + myValue.length;
