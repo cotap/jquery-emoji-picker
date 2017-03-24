@@ -1,4 +1,4 @@
-$(function() {
+;(function($) {
 $.fn.emojiPicker.emojis = [
   {
     "name": "copyright",
@@ -5985,4 +5985,4 @@ $.fn.emojiPicker.emojis = [
     "category": "folderol"
   }
 ]
-});
+})(jQuery);
