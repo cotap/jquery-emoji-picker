@@ -1,4 +1,6 @@
-$(function() {
+// $(function() {
+;(function($) {
+
 $.fn.emojiPicker.emojis = [
   {
     "name": "grinning",
@@ -9072,4 +9074,5 @@ $.fn.emojiPicker.emojis = [
     "category": "flag"
   }
 ]
-});
+// });
+})(jQuery);

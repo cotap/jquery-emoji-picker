@@ -65,12 +65,12 @@
     }
 
     // Do not enable if on mobile device (emojis already present)
-    if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-      this.init();
-    } else {
-      this.isMobile = true;
-    }
-
+    // if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    //   this.init();
+    // } else {
+    //   this.isMobile = true;
+    // }
+    this.init();
   }
 
   $.extend(EmojiPicker.prototype, {
@@ -270,6 +270,8 @@
       addToLocalStorage(emojiShortcode);
       updateRecentlyUsed(emojiShortcode);
 
+      this.$el.data('image', emojiSpan.css('backgroundImage'));
+
       // For anyone who is relying on the keyup event
       $(this.element).trigger("keyup");
 
@@ -277,6 +279,10 @@
       var event = document.createEvent("HTMLEvents");
       event.initEvent("input", true, true);
       this.element.dispatchEvent(event);
+
+      if (this.settings.hideOnSelection) {
+        this.hide();
+      }
     },
 
     emojiMouseover: function(e) {
@@ -554,7 +560,8 @@
       var startPos = inputField.selectionStart;
       var endPos = inputField.selectionEnd;
       var scrollTop = inputField.scrollTop;
-      inputField.value = inputField.value.substring(0, startPos)+myValue+inputField.value.substring(endPos,inputField.value.length);
+      // inputField.value = inputField.value.substring(0, startPos)+myValue+inputField.value.substring(endPos,inputField.value.length);
+      inputField.value = myValue; //inputField.value.substring(0, startPos)+myValue+inputField.value.substring(endPos,inputField.value.length);
       inputField.focus();
       inputField.selectionStart = startPos + myValue.length;
       inputField.selectionEnd = startPos + myValue.length;
