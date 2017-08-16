@@ -136,7 +136,7 @@
       this.$picker.unbind('mouseout');
       this.$picker.unbind('click');
       this.$picker.remove();
-
+      $(document.body).unbind('click');
       $.removeData(this.$el.get(0), 'emojiPicker');
 
       return this;
@@ -196,25 +196,38 @@
 
       // Step 1
       // Luckily jquery already does this...
-      var positionedParent = this.$picker.offsetParent();
-      var parentOffset = positionedParent.offset(); // now have a top/left object
+      // var positionedParent = this.$picker.offsetParent();
+      // var parentOffset = positionedParent.offset(); // now have a top/left object
 
-      // Step 2
+      // // Step 2
+      // var elOffset = this.$el.offset();
+      // if(this.settings.position == 'right'){
+      //   elOffset.left += this.$el.outerWidth() - this.settings.width;
+      // }
+      // elOffset.top += this.$el.outerHeight();
+
+      // // Step 3
+      // var diffOffset = {
+      //   top: (elOffset.top - parentOffset.top),
+      //   left: (elOffset.left - parentOffset.top)
+      // };
+
+      // this.$picker.css({
+      //   top: diffOffset.top,
+      //   left: diffOffset.left
+      // });
+
+      // return this;
       var elOffset = this.$el.offset();
-      if(this.settings.position == 'right'){
-        elOffset.left += this.$el.outerWidth() - this.settings.width;
+      var contentHeight = $('#content').height();
+      var topDiff = 0;
+      if ((this.settings.height + elOffset.top) > contentHeight) {
+        topDiff = contentHeight - this.settings.height - elOffset.top;
       }
-      elOffset.top += this.$el.outerHeight();
-
-      // Step 3
-      var diffOffset = {
-        top: (elOffset.top - parentOffset.top),
-        left: (elOffset.left - parentOffset.top)
-      };
 
       this.$picker.css({
-        top: diffOffset.top,
-        left: diffOffset.left
+        top: topDiff,
+        left: 0
       });
 
       return this;
@@ -263,6 +276,7 @@
         emojiSpan = clickTarget.parent().find('.emoji');
       }
 
+      var imageData = emojiSpan.css('backgroundImage');
       var emojiShortcode = emojiSpan.attr('class').split('emoji-')[1];
       var emojiUnicode = toUnicode(findEmoji(emojiShortcode).unicode[defaults.emojiSet]);
 
@@ -270,7 +284,7 @@
       addToLocalStorage(emojiShortcode);
       updateRecentlyUsed(emojiShortcode);
 
-      this.$el.data('image', emojiSpan.css('backgroundImage'));
+      this.$el.data('image', imageData);
 
       // For anyone who is relying on the keyup event
       $(this.element).trigger("keyup");
@@ -422,13 +436,18 @@
     if (typeof options === 'string') {
       this.each(function() {
         var plugin = $.data( this, pluginName );
-        switch(options) {
-          case 'toggle':
-            plugin.iconClicked();
-            break;
-          case 'destroy':
-            plugin.destroyPicker();
-            break;
+        if (plugin) {
+          switch(options) {
+            case 'toggle':
+              plugin.iconClicked();
+              break;
+            case 'show':
+              plugin.show();
+              break;
+            case 'destroy':
+              plugin.destroyPicker();
+              break;
+          }
         }
       });
       return this;
