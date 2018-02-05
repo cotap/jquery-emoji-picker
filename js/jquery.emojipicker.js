@@ -115,7 +115,7 @@
     },
 
     listen: function() {
-      // If the button is being used, wrapper has not been set, 
+      // If the button is being used, wrapper has not been set,
       //    and will not need a listener
       if (this.settings.button){
         // Clicking on the picker icon
@@ -140,38 +140,46 @@
     },
 
     updatePosition: function() {
-  
+
       /*  Process:
-          1. Find the nearest positioned element by crawling up the ancestors, record it's offset 
+          1. Find the nearest positioned element by crawling up the ancestors, record it's offset
           2. Find the bottom left or right of the input element, record this (Account for position setting of left or right)
           3. Find the difference between the two, as this will become our new position
           4. Magic.
 
           N.B. The removed code had a reference to top/bottom positioning, but I don't see the use case for this..
-      */    
-     
+      */
+
+      // Step 0
+      // Show picker, otherwise we CANNOT get offsetParent
+      this.$picker.show();
+
       // Step 1
       // Luckily jquery already does this...
       var positionedParent = this.$picker.offsetParent();
       var parentOffset = positionedParent.offset(); // now have a top/left object
 
-      // Step 2
-      var elOffset = this.$el.offset();
-      if(this.settings.position == 'right'){
-        elOffset.left += this.$el.outerWidth() - this.settings.width;
+      this.$picker.hide();
+
+      if(!this.settings.position == 'none'){
+        // Step 2
+        var elOffset = this.$el.offset();
+        if(this.settings.position == 'right'){
+          elOffset.left += this.$el.outerWidth() - this.settings.width;
+        }
+        elOffset.top += this.$el.outerHeight();
+
+        // Step 3
+        var diffOffset = {
+          top: (elOffset.top - parentOffset.top),
+          left: (elOffset.left - parentOffset.top)
+        };
+
+        this.$picker.css({
+          top: diffOffset.top,
+          left: diffOffset.left
+        });
       }
-      elOffset.top += this.$el.outerHeight();
-
-      // Step 3
-      var diffOffset = {
-        top: (elOffset.top - parentOffset.top),
-        left: (elOffset.left - parentOffset.top)
-      };
-
-      this.$picker.css({
-        top: diffOffset.top,
-        left: diffOffset.left
-      });
 
       return this;
     },
